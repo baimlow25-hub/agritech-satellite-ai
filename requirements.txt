@@ -1,0 +1,7 @@
+streamlit
+rasterio
+scikit-learn
+matplotlib
+numpy
+sqlalchemy
+psycopg2-binarypython 
