@@ -12,7 +12,6 @@ st.set_page_config(page_title="Agritech Satellite AI Dashboard", layout="wide", 
 
 st.title("🛰️ Executive Analytics Platform")
 st.markdown("---")
-
 # Initialize the database connection using your Streamlit secrets
 conn = st.connection("postgresql", type="sql")
 
@@ -30,11 +29,13 @@ def save_ui_record(filename, mean_score, prediction):
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         with conn.session as session:
-        session.execute(
-                text("""
-INSERT INTO analytics_history (timestamp, ndvi, predicted_yield) 
-VALUES (:timestamp, :ndvi, :yield);
-"""),
+            query = text("""
+             INSERT INTO analytics_history (timestamp, ndvi, predicted_yield) 
+             VALUES (:timestamp, :ndvi, :yield);
+                         """)
+            
+            session.execute(
+                query,
                 {
                     "timestamp": current_time, 
                     "ndvi": round(float(mean_score), 4), 
@@ -44,7 +45,6 @@ VALUES (:timestamp, :ndvi, :yield);
             session.commit()
     except Exception as e:
         st.error(f"Database save failed: {e}")
-
 # ==========================================
 # SIDEBAR: IMAGE INGESTION PORTAL
 # ==========================================
@@ -142,5 +142,7 @@ else:
         ax2.plot(timestamps, yield_predictions, color=color, marker='s', linestyle='--', linewidth=2)
     ax2.tick_params(axis='y', labelcolor=color)
     
+    fig.tight_layout()
+    st.pyplot(fig)
     fig.tight_layout()
     st.pyplot(fig)
