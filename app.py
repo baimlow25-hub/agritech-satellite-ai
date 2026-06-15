@@ -12,28 +12,37 @@ st.set_page_config(page_title="Agritech Satellite AI Dashboard", layout="wide", 
 st.title("🛰️ Executive Analytics Platform")
 st.markdown("---")
 
-LOG_FILE = "analytics_history.json"
+# Initialize the database connection using your Streamlit secrets
+conn = st.connection("postgresql", type="sql")
 
 def load_analytics_history():
-    if os.path.exists(LOG_FILE):
-        try:
-            with open(LOG_FILE, "r") as f:
-                return json.load(f)
-        except Exception:
-            return []
-    return []
+    try:
+        # Fetch records cleanly as a Pandas DataFrame
+        df = conn.query("SELECT timestamp, ndvi, predicted_yield FROM analytics_history ORDER BY id ASC;")
+        # Convert it to a list of dictionaries to match your dashboard's expectations
+        return df.to_dict(orient="records")
+    except Exception:
+        return []
 
 def save_ui_record(filename, mean_score, prediction):
-    history = load_analytics_history()
-    new_record = {
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "files_analyzed": [filename],
-        "mean_ndvi_canopy_score": round(mean_score, 4),
-        "predicted_yield_mt_per_ha": round(prediction, 2)
-    }
-    history.append(new_record)
-    with open(LOG_FILE, "w") as f:
-        json.dump(history, f, indent=4)
+    try:
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        with conn.session as session:
+            session.execute(
+                """
+                INSERT INTO analytics_history (timestamp, ndvi, predicted_yield) 
+                VALUES (:timestamp, :ndvi, :yield);
+                """,
+                {
+                    "timestamp": current_time, 
+                    "ndvi": round(float(mean_score), 4), 
+                    "yield": round(float(prediction), 2)
+                }
+            )
+            session.commit()
+    except Exception as e:
+        st.error(f"Database save failed: {e}")
 
 # ==========================================
 # SIDEBAR: IMAGE INGESTION PORTAL
