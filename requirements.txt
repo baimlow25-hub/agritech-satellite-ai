@@ -3,3 +3,4 @@ rasterio
 scikit-learn
 matplotlib
 numpy
+psycopg2-binary
