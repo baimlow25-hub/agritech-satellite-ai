@@ -3,5 +3,5 @@ rasterio
 scikit-learn
 matplotlib
 numpy
-psycopg2-binary
-SQLAlchemy
+sqlalchemy
+psycopg2-binarypython 
