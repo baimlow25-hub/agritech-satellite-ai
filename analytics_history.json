@@ -1,0 +1,53 @@
+[
+    {
+        "timestamp": "2026-06-15 17:26:08",
+        "files_analyzed": [
+            "RGB.byte.tif"
+        ],
+        "mean_ndvi_canopy_score": 0.1944,
+        "predicted_yield_mt_per_ha": 1.34
+    },
+    {
+        "timestamp": "2026-06-15 17:26:42",
+        "files_analyzed": [
+            "RGB.byte.tif",
+            "RGB_week2.byte.tif"
+        ],
+        "mean_ndvi_canopy_score": 0.5443,
+        "predicted_yield_mt_per_ha": 4.52
+    },
+    {
+        "timestamp": "2026-06-15 17:27:06",
+        "files_analyzed": [
+            "RGB.byte.tif",
+            "RGB_week2.byte.tif",
+            "RGB_week3.byte.tif"
+        ],
+        "mean_ndvi_canopy_score": 0.661,
+        "predicted_yield_mt_per_ha": 4.79
+    },
+    {
+        "timestamp": "2026-06-15 17:42:21",
+        "files_analyzed": [
+            "RGB_week2.byte.tif"
+        ],
+        "mean_ndvi_canopy_score": 0.5443,
+        "predicted_yield_mt_per_ha": 4.52
+    },
+    {
+        "timestamp": "2026-06-15 17:42:41",
+        "files_analyzed": [
+            "RGB_week3.byte.tif"
+        ],
+        "mean_ndvi_canopy_score": 0.661,
+        "predicted_yield_mt_per_ha": 4.79
+    },
+    {
+        "timestamp": "2026-06-16 02:12:56",
+        "files_analyzed": [
+            "RGB.byte.tif"
+        ],
+        "mean_ndvi_canopy_score": 0.1944,
+        "predicted_yield_mt_per_ha": 1.34
+    }
+]
