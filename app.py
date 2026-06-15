@@ -3,6 +3,7 @@ import os
 import json
 import matplotlib.pyplot as plt
 from datetime import datetime
+from sqlalchemy import text
 from index_calculator import calculate_ndvi
 from yield_predictor import predict_crop_yield
 
@@ -29,11 +30,11 @@ def save_ui_record(filename, mean_score, prediction):
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         with conn.session as session:
-            session.execute(
-                """
+        session.execute(
+                text("""
                 INSERT INTO analytics_history (timestamp, ndvi, predicted_yield) 
                 VALUES (:timestamp, :ndvi, :yield);
-                """,
+                """),
                 {
                     "timestamp": current_time, 
                     "ndvi": round(float(mean_score), 4), 
