@@ -32,9 +32,9 @@ def save_ui_record(filename, mean_score, prediction):
         with conn.session as session:
         session.execute(
                 text("""
-                INSERT INTO analytics_history (timestamp, ndvi, predicted_yield) 
-                VALUES (:timestamp, :ndvi, :yield);
-                """),
+INSERT INTO analytics_history (timestamp, ndvi, predicted_yield) 
+VALUES (:timestamp, :ndvi, :yield);
+"""),
                 {
                     "timestamp": current_time, 
                     "ndvi": round(float(mean_score), 4), 
