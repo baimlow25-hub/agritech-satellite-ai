@@ -1,4 +1,6 @@
-sqlalchemy
+streamlit
 numpy
 pandas
-streamlit
+sqlalchemy
+rasterio
+scikit-learn
