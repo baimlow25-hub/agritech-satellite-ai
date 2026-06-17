@@ -45,5 +45,15 @@
         ],
         "mean_ndvi_canopy_score": 0.661,
         "predicted_yield_mt_per_ha": 4.79
+    },
+    {
+        "timestamp": "2026-06-17 07:28:28",
+        "files_analyzed": [
+            "RGB.byte.tif",
+            "RGB_week2.byte.tif",
+            "RGB_week3.byte.tif"
+        ],
+        "mean_ndvi_canopy_score": 0.661,
+        "predicted_yield_mt_per_ha": 4.79
     }
 ]

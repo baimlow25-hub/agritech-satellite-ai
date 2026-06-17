@@ -2,6 +2,7 @@ import streamlit as st
 import os
 import glob
 import json
+import pandas as pd # Required for the new charts
 from datetime import datetime
 from index_calculator import calculate_ndvi
 from yield_predictor import predict_crop_yield
@@ -33,18 +34,15 @@ def save_to_analytics_log(file_names, mean_health, predicted_yield):
 
 def run_batch_pipeline():
     st.write("🚀 Firing up Chronological Batch AI Processing Pipeline...")
-    
     image_folder = "satellite_images"
     search_path = os.path.join(image_folder, "*.tif")
     satellite_files = sorted(glob.glob(search_path))
     
-    # Error handling to inform the user if files are missing
     if not satellite_files:
         st.error("No satellite images found in the 'satellite_images' folder.")
         return
 
     st.write(f"📂 Found {len(satellite_files)} images for analysis.")
-    
     historical_scores = []
     processed_filenames = []
     
@@ -64,10 +62,20 @@ def run_batch_pipeline():
     if historical_scores:
         latest_score = historical_scores[-1]
         st.write("🎯 Batch processing complete. Running AI Prediction...")
-        
         predicted_yield = predict_crop_yield(latest_score)
         save_to_analytics_log(processed_filenames, latest_score, predicted_yield)
         st.success("🏁 Pipeline closed successfully.")
+
+def plot_analytics():
+    if os.path.exists("analytics_history.json"):
+        with open("analytics_history.json", "r") as f:
+            history = json.load(f)
+            df = pd.DataFrame(history)
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
+            
+            st.subheader("Crop Health Trend (NDVI)")
+            # Line chart of health scores over time
+            st.line_chart(df.set_index('timestamp')[['mean_ndvi_canopy_score']])
 
 def run_ui_pipeline():
     st.set_page_config(page_title="Agritech AI Dashboard", layout="wide")
@@ -77,11 +85,13 @@ def run_ui_pipeline():
         with st.spinner("Processing satellite imagery..."):
             run_batch_pipeline()
             
-            if os.path.exists("analytics_history.json"):
-                with open("analytics_history.json", "r") as f:
-                    history = json.load(f)
-                    st.subheader("Historical Analytics")
-                    st.table(history)
+    # Always display the dashboard analytics
+    if os.path.exists("analytics_history.json"):
+        plot_analytics()
+        with open("analytics_history.json", "r") as f:
+            history = json.load(f)
+            st.subheader("Historical Analytics Table")
+            st.table(pd.DataFrame(history))
 
 if __name__ == "__main__":
     run_ui_pipeline()
