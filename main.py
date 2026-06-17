@@ -36,7 +36,6 @@ def run_batch_pipeline(uploaded_files):
     processed_filenames = []
     
     for uploaded_file in uploaded_files:
-        # Save uploaded file temporarily to process
         temp_path = uploaded_file.name
         with open(temp_path, "wb") as f:
             f.write(uploaded_file.getbuffer())
@@ -51,7 +50,6 @@ def run_batch_pipeline(uploaded_files):
             historical_scores.append(mean_score)
             processed_filenames.append(temp_path)
         
-        # Cleanup temporary file
         if os.path.exists(temp_path):
             os.remove(temp_path)
             
@@ -74,7 +72,6 @@ def run_ui_pipeline():
     st.set_page_config(page_title="Agritech AI Dashboard", layout="wide")
     st.title("🌾 Agritech Satellite AI")
     
-    # NEW: File Uploader
     uploaded_files = st.file_uploader("Upload satellite imagery (.tif)", type=["tif"], accept_multiple_files=True)
     
     if uploaded_files:
@@ -83,11 +80,22 @@ def run_ui_pipeline():
                 run_batch_pipeline(uploaded_files)
     
     if os.path.exists("analytics_history.json"):
-        plot_analytics()
         with open("analytics_history.json", "r") as f:
             history = json.load(f)
+            df = pd.DataFrame(history)
+            
+            # Export Feature
+            csv = df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="📥 Download Analytics as CSV",
+                data=csv,
+                file_name='agritech_analytics.csv',
+                mime='text/csv',
+            )
+            
+            plot_analytics()
             st.subheader("Historical Analytics Table")
-            st.table(pd.DataFrame(history))
+            st.table(df)
 
 if __name__ == "__main__":
     run_ui_pipeline()
